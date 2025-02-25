@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using System.Runtime.CompilerServices;
@@ -20,6 +20,7 @@ namespace LineSprinklersRedux.Framework
             if (obj == null) return false;
             return obj.HasContextTag(ModConstants.MainContextTag);
         }
+
         public static IEnumerable<Vector2> GetCoverage(SObject sprinkler)
         {
             var tile = sprinkler.TileLocation;
@@ -59,13 +60,12 @@ namespace LineSprinklersRedux.Framework
 
         public static int Range(SObject sprinkler)
         {
-            int baseRange = CustomFields.GetRange(sprinkler);
             if (HasPressureNozzle(sprinkler))
-            {
-                return baseRange * 2;
-            }
-            return baseRange;
+                return CustomFields.GetRange(sprinkler) * 2;
+
+            return CustomFields.GetRange(sprinkler);
         }
+
         public static void Rotate(SObject sprinkler)
         {
             var current = ModData.GetDirection(sprinkler);
@@ -208,7 +208,7 @@ namespace LineSprinklersRedux.Framework
 
         private static bool HasPressureNozzle(SObject sprinkler)
         {
-            return IsLineSprinkler(sprinkler) && sprinkler.GetBaseRadiusForSprinkler() != sprinkler.GetModifiedRadiusForSprinkler();
+            return sprinkler.heldObject.Value != null && sprinkler.heldObject.Value.QualifiedItemId == "(O)915";
         }
     }
 }
